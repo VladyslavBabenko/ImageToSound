@@ -6,25 +6,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.*?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.github.vladyslavbabenko.imagetosound.javafx.controller.FXController">
     <children>
         <HBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0">
             <children>
-                <ImageView cache="true" fitHeight="370.0" fitWidth="370.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="imageView" cache="true" fitHeight="370.0" fitWidth="370.0" pickOnBounds="true"
+                           preserveRatio="true">
                     <HBox.margin>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
                     </HBox.margin>
                 </ImageView>
-                <Line endX="-100.0" endY="400.0" startX="-100.0"/>
+                <Line endX="-100.0" endY="420.0" startX="-100.0"/>
                 <VBox alignment="CENTER" prefHeight="400.0" prefWidth="200.0" spacing="5.0">
                     <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                             <children>
                                 <Button alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity"
-                                        minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0"
-                                        text="Upload Image" textAlignment="CENTER" wrapText="true">
+                                        minWidth="-Infinity" mnemonicParsing="false" onAction="#chooseImage"
+                                        prefWidth="80.0" text="Upload Image" textAlignment="CENTER" wrapText="true">
                                     <font>
                                         <Font name="Calibri Bold" size="14.0"/>
                                     </font>
@@ -59,17 +60,17 @@
                                                 <Font name="System Bold" size="10.0"/>
                                             </font>
                                         </Label>
-                                        <Label alignment="CENTER" prefHeight="49.0" prefWidth="28.0" text="X"
-                                               textAlignment="CENTER" textFill="RED">
+                                        <Label fx:id="imageStatusIndicator_1" alignment="CENTER" prefHeight="49.0"
+                                               prefWidth="28.0" text="X" textAlignment="CENTER" textFill="RED">
                                             <font>
                                                 <Font name="System Bold" size="24.0"/>
                                             </font>
                                         </Label>
                                     </children>
                                 </VBox>
-                                <Button contentDisplay="CENTER" disable="true" minHeight="-Infinity"
-                                        minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0"
-                                        text="Convert Image" textAlignment="CENTER" wrapText="true">
+                                <Button fx:id="convertImageButton" contentDisplay="CENTER" disable="true"
+                                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                        prefWidth="80.0" text="Convert Image" textAlignment="CENTER" wrapText="true">
                                     <font>
                                         <Font name="Calibri Bold" size="14.0"/>
                                     </font>
@@ -103,8 +104,8 @@
                                                 <Font name="System Bold" size="10.0"/>
                                             </font>
                                         </Label>
-                                        <Label alignment="CENTER" prefHeight="49.0" prefWidth="28.0" text="X"
-                                               textAlignment="CENTER" textFill="RED">
+                                        <Label fx:id="imageStatusIndicator_2" alignment="CENTER" prefHeight="49.0"
+                                               prefWidth="28.0" text="X" textAlignment="CENTER" textFill="RED">
                                             <font>
                                                 <Font name="System Bold" size="24.0"/>
                                             </font>
@@ -125,8 +126,8 @@
                                                 <Font name="System Bold" size="10.0"/>
                                             </font>
                                         </Label>
-                                        <Label alignment="CENTER" prefHeight="49.0" prefWidth="28.0" text="X"
-                                               textAlignment="CENTER" textFill="RED">
+                                        <Label fx:id="audioStatusIndicator_1" alignment="CENTER" prefHeight="49.0"
+                                               prefWidth="28.0" text="X" textAlignment="CENTER" textFill="RED">
                                             <font>
                                                 <Font name="System Bold" size="24.0"/>
                                             </font>
@@ -150,6 +151,22 @@
                                     </children>
                                 </VBox>
                             </children>
+                        </HBox>
+                        <Line endX="100.0" startX="-100.0"/>
+                        <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0">
+                            <children>
+                                <Button alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity"
+                                        minWidth="-Infinity" mnemonicParsing="false" onAction="#reset" prefHeight="30.0"
+                                        prefWidth="80.0" style="-fx-background-color: lightPink;" text="Reset"
+                                        textAlignment="CENTER">
+                                    <font>
+                                        <Font name="Calibri Bold" size="14.0"/>
+                                    </font>
+                                </Button>
+                            </children>
+                            <VBox.margin>
+                                <Insets top="5.0"/>
+                            </VBox.margin>
                         </HBox>
                     </children>
                     <padding>
