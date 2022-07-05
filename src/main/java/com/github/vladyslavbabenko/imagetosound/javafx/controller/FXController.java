@@ -17,13 +17,12 @@ import org.springframework.stereotype.Component;
 @FxmlView("GUI.fxml")
 public class FXController {
     private final ImageToSoundService imageToSoundService;
-    private boolean isImageLoaded;
-    private boolean isAudioLoaded;
     private final String checkMark = "✔";
     private final Paint green = Color.GREEN;
     private final String xMark = "X";
     private final Paint red = Color.RED;
-
+    private boolean isImageLoaded;
+    private boolean isAudioLoaded;
     @FXML
     private ImageView imageView;
     @FXML
@@ -35,7 +34,11 @@ public class FXController {
     @FXML
     private Button convertImageButton;
     @FXML
+    private Button mashupButton;
+    @FXML
     private Slider trackLengthSlider;
+    @FXML
+    private Slider relativeBrightnessSlider;
 
     @Autowired
     public FXController(ImageToSoundService imageToSoundService) {
@@ -53,7 +56,9 @@ public class FXController {
             imageView.setOpacity(0.5);
 
             updateImageStatus(checkMark, green);
-
+            if (isImageLoaded && isAudioLoaded) {
+                mashupButton.setDisable(false);
+            }
             convertImageButton.setDisable(!isImageLoaded);
         }
     }
@@ -66,7 +71,9 @@ public class FXController {
 
             isAudioLoaded = true;
             updateAudioStatus(checkMark, green);
-
+            if (isImageLoaded && isAudioLoaded) {
+                mashupButton.setDisable(false);
+            }
             convertImageButton.setDisable(!isAudioLoaded);
         }
     }
@@ -77,13 +84,15 @@ public class FXController {
     public void reset() {
         imageToSoundService.reset();
         imageView.setImage(null);
-        isImageLoaded = false;
+        isAudioLoaded = isImageLoaded = false;
 
         updateAudioStatus(xMark, red);
         updateImageStatus(xMark, red);
 
         convertImageButton.setDisable(!isImageLoaded);
+        mashupButton.setDisable(!(isImageLoaded && isAudioLoaded));
         trackLengthSlider.setValue(trackLengthSlider.getMin());
+        relativeBrightnessSlider.setValue(0.0);
     }
 
     /**
@@ -114,6 +123,18 @@ public class FXController {
      * Calls a service method to save the converted image
      */
     public void saveImageAudio() {
-        imageToSoundService.saveImageAudio(ImageConversionQuality.VERY_GOOD, (int) trackLengthSlider.getValue());
+        if (isImageLoaded) {
+            imageToSoundService.saveImageAudio(ImageConversionQuality.VERY_GOOD, (int) trackLengthSlider.getValue());
+        }
+    }
+
+    /**
+     * Calls a service method to save the mashup of converted image and audio track
+     */
+    public void saveMashup() {
+        if (isImageLoaded && isAudioLoaded) {
+            imageToSoundService.setBrightness(relativeBrightnessSlider.getValue());
+            imageToSoundService.saveMashup(ImageConversionQuality.VERY_GOOD, (int) trackLengthSlider.getValue());
+        }
     }
 }

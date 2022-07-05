@@ -104,7 +104,7 @@
                                         </Label>
                                     </children>
                                 </VBox>
-                                <Button alignment="CENTER" contentDisplay="CENTER" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0" text="MASH-up" textAlignment="CENTER">
+                                <Button fx:id="mashupButton" alignment="CENTER" contentDisplay="CENTER" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveMashup" prefWidth="80.0" text="MASH-up" textAlignment="CENTER">
                                     <font>
                                         <Font name="Calibri Bold" size="14.0" />
                                     </font>
@@ -134,7 +134,7 @@
                                                 <Font name="System Bold" size="14.0" />
                                             </font>
                                         </Label>
-                                        <Slider majorTickUnit="5.0" max="10.0" maxWidth="-Infinity" min="-10.0" minWidth="-Infinity" minorTickCount="5" prefWidth="140.0" showTickLabels="true" />
+                                        <Slider fx:id="relativeBrightnessSlider" blockIncrement="0.5" majorTickUnit="0.5" max="1.0" maxWidth="-Infinity" min="-1.0" minWidth="-Infinity" minorTickCount="5" prefWidth="140.0" showTickLabels="true" />
                                     </children>
                                 </VBox>
                             </children>
