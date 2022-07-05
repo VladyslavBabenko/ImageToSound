@@ -4,7 +4,7 @@ import com.github.vladyslavbabenko.imagetosound.javafx.service.ImageToSoundServi
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -41,7 +41,7 @@ public class FXController {
      * Sets selected image to the imageViewer and updates GUI
      */
     public void chooseImage() {
-        imageView.setImage(convertToGrayScale(imageToSoundService.chooseImage("Select an image")));
+        imageView.setImage(imageToSoundService.convertToGrayScale(imageToSoundService.chooseImage("Select an image")));
 
         if (imageView.getImage() != null) {
             isImageLoaded = true;
@@ -57,32 +57,13 @@ public class FXController {
      * Resets all values bringing the program to its starting point
      */
     public void reset() {
+        imageToSoundService.reset();
         imageView.setImage(null);
         isImageLoaded = false;
 
         updateText(xMark, red, xMark, red);
 
         convertImageButton.setDisable(true);
-    }
-
-    /**
-     * Converts input image to gray scale
-     *
-     * @param image input image
-     * @return converted image to grayscale
-     */
-    private Image convertToGrayScale(Image image) {
-        WritableImage result = new WritableImage((int) image.getWidth(), (int) image.getHeight());
-        PixelReader pixelReader = image.getPixelReader();
-        PixelWriter pixelWriter = result.getPixelWriter();
-
-        for (int x = 0; x < result.getWidth(); x++) {
-            for (int y = 0; y < result.getHeight(); y++) {
-                pixelWriter.setColor(x, y, pixelReader.getColor(x, y).grayscale());
-            }
-        }
-
-        return result;
     }
 
     /**
@@ -101,5 +82,12 @@ public class FXController {
         imageStatusIndicator_2.setTextFill(imageColorIndicator);
         audioStatusIndicator_1.setText(audioIndicatorText);
         audioStatusIndicator_1.setTextFill(audioColorIndicator);
+    }
+
+    /**
+     * Calls a service method to save the converted image
+     */
+    public void saveImageAudio() {
+        imageToSoundService.saveImageAudio();
     }
 }
