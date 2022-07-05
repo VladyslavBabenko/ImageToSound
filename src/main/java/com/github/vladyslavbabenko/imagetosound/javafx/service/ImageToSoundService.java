@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class ImageToSoundService {
     private Image image;
     private int width, height;
+    private double brightness = 1.0;
     private byte[] audioBytes;
 
     /**
@@ -47,9 +48,9 @@ public class ImageToSoundService {
     }
 
     /**
-     * Creates a new window where user can select an image
+     * Creates a new window where user can select an audio file
      *
-     * @return the selected image.
+     * @return byte array from audio file
      */
     public byte[] chooseAudio(String windowTitle) {
         FileChooser chooser = new FileChooser();
@@ -66,12 +67,12 @@ public class ImageToSoundService {
             try (InputStream fileInputStream = new FileInputStream(inputFile)) {
                 audioBytes = new byte[(int) inputFile.length()];
                 fileInputStream.read(audioBytes, 0, audioBytes.length);
-
+                return audioBytes;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return audioBytes;
+        return new byte[0];
     }
 
     /**
@@ -125,6 +126,13 @@ public class ImageToSoundService {
     }
 
     /**
+     * Calls all necessary methods to save the mashup of converted image and audio track
+     */
+    public void saveMashup(ImageConversionQuality quality, int trackLength) {
+        saveAsWav(mashup(createAudio(quality, trackLength), audioBytes), getImageTitle());
+    }
+
+    /**
      * Gets the title of the image
      *
      * @return image title from url
@@ -163,6 +171,8 @@ public class ImageToSoundService {
     public void reset() {
         image = null;
         width = height = 0;
+        brightness = 1.0;
+        audioBytes = null;
     }
 
     /**
@@ -190,5 +200,33 @@ public class ImageToSoundService {
         return dataToSave;
     }
 
+    /**
+     * Creates a mashup from a converted image and an audio track.
+     *
+     * @return double array that is a mashup of a converted image and an audio track.
+     */
+    private double[] mashup(double[] convertedImage, byte[] audioBytes) {
+        if (audioBytes.length > 0) {
+            double[] dataMashup = new double[audioBytes.length];
 
+            for (int i = 0; i < dataMashup.length; i++) {
+                if (i < convertedImage.length) {
+                    dataMashup[i] = audioBytes[i] + (convertedImage[i] * brightness);
+                } else dataMashup[i] = audioBytes[i];
+            }
+
+            return dataMashup;
+        }
+        return new double[0];
+    }
+
+
+    /**
+     * Setter for brightness
+     *
+     * @param brightness new brightness value
+     */
+    public void setBrightness(double brightness) {
+        this.brightness = 1.0 + brightness;
+    }
 }
