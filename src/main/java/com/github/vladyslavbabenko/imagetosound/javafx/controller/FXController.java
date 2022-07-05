@@ -1,9 +1,11 @@
 package com.github.vladyslavbabenko.imagetosound.javafx.controller;
 
+import com.github.vladyslavbabenko.imagetosound.javafx.enums.ImageConversionQuality;
 import com.github.vladyslavbabenko.imagetosound.javafx.service.ImageToSoundService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -31,6 +33,8 @@ public class FXController {
     private Label audioStatusIndicator_1;
     @FXML
     private Button convertImageButton;
+    @FXML
+    private Slider trackLengthSlider;
 
     @Autowired
     public FXController(ImageToSoundService imageToSoundService) {
@@ -63,7 +67,8 @@ public class FXController {
 
         updateText(xMark, red, xMark, red);
 
-        convertImageButton.setDisable(true);
+        convertImageButton.setDisable(!isImageLoaded);
+        trackLengthSlider.setValue(trackLengthSlider.getMin());
     }
 
     /**
@@ -72,7 +77,7 @@ public class FXController {
      * @param imageIndicatorText  sets text for image status indicators
      * @param imageColorIndicator sets color for image status indicators
      * @param audioIndicatorText  sets text for audio status indicators
-     * @param audioColorIndicator sets text for audio status indicators
+     * @param audioColorIndicator sets color for audio status indicators
      */
     private void updateText(String imageIndicatorText, Paint imageColorIndicator,
                             String audioIndicatorText, Paint audioColorIndicator) {
@@ -88,6 +93,6 @@ public class FXController {
      * Calls a service method to save the converted image
      */
     public void saveImageAudio() {
-        imageToSoundService.saveImageAudio();
+        imageToSoundService.saveImageAudio(ImageConversionQuality.VERY_GOOD, (int) trackLengthSlider.getValue());
     }
 }

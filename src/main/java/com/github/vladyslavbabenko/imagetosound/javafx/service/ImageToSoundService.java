@@ -92,8 +92,8 @@ public class ImageToSoundService {
     /**
      * Calls all necessary methods to save the converted image
      */
-    public void saveImageAudio() {
-        saveAsWav(convertImageToSine(image, ImageConversionQuality.VERY_GOOD.getQuality()), getImageTitle());
+    public void saveImageAudio(ImageConversionQuality quality, int trackLength) {
+        saveAsWav(createAudio(quality, trackLength), getImageTitle());
     }
 
     /**
@@ -120,8 +120,10 @@ public class ImageToSoundService {
             byteData[i + 1] = (byte) (aux >> 8);
         }
         AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
-        try (AudioInputStream audioInputStream = new AudioInputStream(new ByteArrayInputStream(byteData), format, byteData.length / format.getFrameSize())) {
-            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, new File(title + "." + AudioFileFormat.Type.WAVE.getExtension()));
+        try (AudioInputStream audioInputStream = new AudioInputStream(new ByteArrayInputStream(byteData), format,
+                byteData.length / format.getFrameSize())) {
+            AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE,
+                    new File(title + "." + AudioFileFormat.Type.WAVE.getExtension()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,8 +132,33 @@ public class ImageToSoundService {
     /**
      * Resets all values to default
      */
-    public void reset(){
+    public void reset() {
         image = null;
         width = height = 0;
+    }
+
+    /**
+     * Creates an audio track of a certain length
+     *
+     * @param length  length of track in sec
+     * @param quality quality of conversion
+     * @return double array of certain length that represents an image
+     */
+    private double[] createAudio(ImageConversionQuality quality, int length) {
+        double[] convertedImage = convertImageToSine(image, quality.getQuality());
+        double[] dataToSave = new double[(int) (44100 * length * 2.1)];
+        int amount = dataToSave.length / convertedImage.length;
+        if (amount == 0) return dataToSave;
+        int index = 0;
+        for (int i = 0; i < convertedImage.length / 256; i++) {
+            for (int j = 0; j < amount; j++) {
+                for (int k = 0; k < 256; k++) {
+                    dataToSave[index++] = convertedImage[i * 256 + k];
+                }
+            }
+
+        }
+
+        return dataToSave;
     }
 }
