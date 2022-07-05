@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class FXController {
     private final ImageToSoundService imageToSoundService;
     private boolean isImageLoaded;
+    private boolean isAudioLoaded;
     private final String checkMark = "✔";
     private final Paint green = Color.GREEN;
     private final String xMark = "X";
@@ -51,9 +52,22 @@ public class FXController {
             isImageLoaded = true;
             imageView.setOpacity(0.5);
 
-            updateText(checkMark, green, xMark, red);
+            updateImageStatus(checkMark, green);
 
             convertImageButton.setDisable(!isImageLoaded);
+        }
+    }
+
+    /**
+     * Selects audioFile from computer and updates GUI
+     */
+    public void chooseAudio() {
+        if (imageToSoundService.chooseAudio("Select audio").length > 0) {
+
+            isAudioLoaded = true;
+            updateAudioStatus(checkMark, green);
+
+            convertImageButton.setDisable(!isAudioLoaded);
         }
     }
 
@@ -65,28 +79,35 @@ public class FXController {
         imageView.setImage(null);
         isImageLoaded = false;
 
-        updateText(xMark, red, xMark, red);
+        updateAudioStatus(xMark, red);
+        updateImageStatus(xMark, red);
 
         convertImageButton.setDisable(!isImageLoaded);
         trackLengthSlider.setValue(trackLengthSlider.getMin());
     }
 
     /**
-     * Updates status indicators
+     * Updates audio status indicators
      *
-     * @param imageIndicatorText  sets text for image status indicators
-     * @param imageColorIndicator sets color for image status indicators
      * @param audioIndicatorText  sets text for audio status indicators
      * @param audioColorIndicator sets color for audio status indicators
      */
-    private void updateText(String imageIndicatorText, Paint imageColorIndicator,
-                            String audioIndicatorText, Paint audioColorIndicator) {
+    private void updateAudioStatus(String audioIndicatorText, Paint audioColorIndicator) {
+        audioStatusIndicator_1.setText(audioIndicatorText);
+        audioStatusIndicator_1.setTextFill(audioColorIndicator);
+    }
+
+    /**
+     * Updates image status indicators
+     *
+     * @param imageIndicatorText  sets text for image status indicators
+     * @param imageColorIndicator sets color for image status indicators
+     */
+    private void updateImageStatus(String imageIndicatorText, Paint imageColorIndicator) {
         imageStatusIndicator_1.setText(imageIndicatorText);
         imageStatusIndicator_1.setTextFill(imageColorIndicator);
         imageStatusIndicator_2.setText(imageIndicatorText);
         imageStatusIndicator_2.setTextFill(imageColorIndicator);
-        audioStatusIndicator_1.setText(audioIndicatorText);
-        audioStatusIndicator_1.setTextFill(audioColorIndicator);
     }
 
     /**
