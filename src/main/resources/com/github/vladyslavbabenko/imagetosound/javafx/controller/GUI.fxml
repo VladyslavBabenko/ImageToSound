@@ -78,7 +78,7 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                             <children>
-                                <Button contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0" text="Select an Audio" textAlignment="CENTER" wrapText="true">
+                                <Button contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#chooseAudio" prefWidth="80.0" text="Select an Audio" textAlignment="CENTER" wrapText="true">
                                     <font>
                                         <Font name="Calibri Bold" size="14.0" />
                                     </font>

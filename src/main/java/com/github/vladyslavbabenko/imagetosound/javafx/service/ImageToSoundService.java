@@ -1,5 +1,6 @@
 package com.github.vladyslavbabenko.imagetosound.javafx.service;
 
+import com.github.vladyslavbabenko.imagetosound.javafx.enums.AudioExtension;
 import com.github.vladyslavbabenko.imagetosound.javafx.enums.ImageConversionQuality;
 import com.github.vladyslavbabenko.imagetosound.javafx.enums.ImageExtension;
 import javafx.scene.image.Image;
@@ -14,9 +15,7 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 public class ImageToSoundService {
     private Image image;
     private int width, height;
+    private byte[] audioBytes;
 
     /**
      * Creates a new window where user can select an image
@@ -44,6 +44,34 @@ public class ImageToSoundService {
         height = (int) image.getHeight();
 
         return image;
+    }
+
+    /**
+     * Creates a new window where user can select an image
+     *
+     * @return the selected image.
+     */
+    public byte[] chooseAudio(String windowTitle) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle(windowTitle);
+        FileChooser.ExtensionFilter audioFilter = new FileChooser.ExtensionFilter("Audio Extensions",
+                Arrays.stream(AudioExtension.values())
+                        .map(AudioExtension::getExtension)
+                        .collect(Collectors.toList()));
+        chooser.getExtensionFilters().add(audioFilter);
+
+        File inputFile = chooser.showOpenDialog(new Stage());
+
+        if (inputFile != null) {
+            try (InputStream fileInputStream = new FileInputStream(inputFile)) {
+                audioBytes = new byte[(int) inputFile.length()];
+                fileInputStream.read(audioBytes, 0, audioBytes.length);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return audioBytes;
     }
 
     /**
@@ -161,4 +189,6 @@ public class ImageToSoundService {
 
         return dataToSave;
     }
+
+
 }
