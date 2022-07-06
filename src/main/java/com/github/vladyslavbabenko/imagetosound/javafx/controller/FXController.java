@@ -1,6 +1,5 @@
 package com.github.vladyslavbabenko.imagetosound.javafx.controller;
 
-import com.github.vladyslavbabenko.imagetosound.javafx.enums.ImageConversionQuality;
 import com.github.vladyslavbabenko.imagetosound.javafx.service.ImageToSoundService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,6 +38,8 @@ public class FXController {
     private Slider trackLengthSlider;
     @FXML
     private Slider relativeBrightnessSlider;
+    @FXML
+    private Slider qualitySlider;
 
     @Autowired
     public FXController(ImageToSoundService imageToSoundService) {
@@ -79,23 +80,6 @@ public class FXController {
     }
 
     /**
-     * Resets all values bringing the program to its starting point
-     */
-    public void reset() {
-        imageToSoundService.reset();
-        imageView.setImage(null);
-        isAudioLoaded = isImageLoaded = false;
-
-        updateAudioStatus(xMark, red);
-        updateImageStatus(xMark, red);
-
-        convertImageButton.setDisable(!isImageLoaded);
-        mashupButton.setDisable(!(isImageLoaded && isAudioLoaded));
-        trackLengthSlider.setValue(trackLengthSlider.getMin());
-        relativeBrightnessSlider.setValue(0.0);
-    }
-
-    /**
      * Updates audio status indicators
      *
      * @param audioIndicatorText  sets text for audio status indicators
@@ -124,7 +108,8 @@ public class FXController {
      */
     public void saveImageAudio() {
         if (isImageLoaded) {
-            imageToSoundService.saveImageAudio(ImageConversionQuality.VERY_GOOD, (int) trackLengthSlider.getValue());
+            imageToSoundService.saveImageAudio(
+                    imageToSoundService.getQualityFormValue((int) qualitySlider.getValue()), (int) trackLengthSlider.getValue());
         }
     }
 
@@ -134,7 +119,26 @@ public class FXController {
     public void saveMashup() {
         if (isImageLoaded && isAudioLoaded) {
             imageToSoundService.setBrightness(relativeBrightnessSlider.getValue());
-            imageToSoundService.saveMashup(ImageConversionQuality.VERY_GOOD, (int) trackLengthSlider.getValue());
+            imageToSoundService.saveMashup(
+                    imageToSoundService.getQualityFormValue((int) qualitySlider.getValue()), (int) trackLengthSlider.getValue());
         }
+    }
+
+    /**
+     * Resets all values bringing the program to its starting point
+     */
+    public void reset() {
+        imageToSoundService.reset();
+        imageView.setImage(null);
+        isAudioLoaded = isImageLoaded = false;
+
+        updateAudioStatus(xMark, red);
+        updateImageStatus(xMark, red);
+
+        convertImageButton.setDisable(!isImageLoaded);
+        mashupButton.setDisable(!(isImageLoaded && isAudioLoaded));
+        trackLengthSlider.setValue(trackLengthSlider.getMin());
+        relativeBrightnessSlider.setValue(0.0);
+        qualitySlider.setValue(qualitySlider.getMin());
     }
 }

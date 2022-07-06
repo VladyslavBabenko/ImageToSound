@@ -40,7 +40,7 @@ public class ImageToSoundService {
                         .collect(Collectors.toList()));
         chooser.getExtensionFilters().add(imageFilter);
         String path = chooser.showOpenDialog(new Stage()).getAbsolutePath();
-        image = new Image(path);
+        image = new Image(path, 128, 128, false, false);
         width = (int) image.getWidth();
         height = (int) image.getHeight();
 
@@ -96,21 +96,21 @@ public class ImageToSoundService {
     }
 
     /**
-     * Converts input image to gray scale
+     * Converts input image to sine
      *
      * @param image   input image
-     * @param quality must be a power of two (use ImageConversionQuality enum)
+     * @param quality must be a power of two
      * @return converted image to sine
      */
-    private double[] convertImageToSine(Image image, int quality) {
+    private double[] convertImageToSine(Image image, ImageConversionQuality quality) {
         PixelReader pixelReader = image.getPixelReader();
-        double[] imageSine = new double[width * quality];
+        double[] imageSine = new double[width * quality.getQuality()];
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 double brightnessValue = pixelReader.getColor(x, (height - 1) - y).grayscale().getBrightness();
-                for (int k = 0; k < quality; k++) {
-                    imageSine[x * quality + k] += brightnessValue * Math.sin((k + y * 147.9) / 44100 * Math.PI * (500 + y * 150));
+                for (int k = 0; k < quality.getQuality(); k++) {
+                    imageSine[x * quality.getQuality() + k] += brightnessValue * Math.sin((k + y * 147.9) / 44100 * Math.PI * (500 + y * 150));
                 }
             }
         }
@@ -183,18 +183,17 @@ public class ImageToSoundService {
      * @return double array of certain length that represents an image
      */
     private double[] createAudio(ImageConversionQuality quality, int length) {
-        double[] convertedImage = convertImageToSine(image, quality.getQuality());
+        double[] convertedImage = convertImageToSine(image, quality);
         double[] dataToSave = new double[(int) (44100 * length * 2.1)];
-        int amount = dataToSave.length / convertedImage.length;
-        if (amount == 0) return dataToSave;
+        int times = dataToSave.length / convertedImage.length;
+        if (times == 0) return convertedImage;
         int index = 0;
         for (int i = 0; i < convertedImage.length / 256; i++) {
-            for (int j = 0; j < amount; j++) {
+            for (int j = 0; j < times; j++) {
                 for (int k = 0; k < 256; k++) {
                     dataToSave[index++] = convertedImage[i * 256 + k];
                 }
             }
-
         }
 
         return dataToSave;
@@ -217,9 +216,9 @@ public class ImageToSoundService {
 
             return dataMashup;
         }
+
         return new double[0];
     }
-
 
     /**
      * Setter for brightness
@@ -228,5 +227,20 @@ public class ImageToSoundService {
      */
     public void setBrightness(double brightness) {
         this.brightness = 1.0 + brightness;
+    }
+
+    /**
+     * Converts input int value to ImageConversionQuality
+     *
+     * @param value input value to set different quality (1-4) by default it set on LOW
+     * @return image conversion quality enum value
+     */
+    public ImageConversionQuality getQualityFormValue(int value) {
+        return switch (value) {
+            case 2 -> ImageConversionQuality.MID;
+            case 3 -> ImageConversionQuality.GOOD;
+            case 4 -> ImageConversionQuality.VERY_GOOD;
+            default -> ImageConversionQuality.LOW;
+        };
     }
 }
