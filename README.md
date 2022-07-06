@@ -7,6 +7,7 @@ As a user, I want to select an image on the computer and convert it to an audio 
 Based on MVP Scope, we can specify next behaviors:
 * User can select an image on the computer
 * User can select duration (5-30 sec.) of the audio track (before saving) in which the converted image will be recorded
+* User can adjust the quality of the conversion
 * User can save converted image into .wav file
 * User can select an audio file from computer
 * User can create a mash-up from a selected image and another audio file
