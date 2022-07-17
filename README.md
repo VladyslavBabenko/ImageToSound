@@ -1,4 +1,6 @@
 # ImageToSound
+## GUI
+![ImageToSound.png](ImageToSound.png)
 ## Idea
 The main idea is to analyze the input image and convert it into sound or mash-up with another audio file if needed
 ##  MVP Scope
